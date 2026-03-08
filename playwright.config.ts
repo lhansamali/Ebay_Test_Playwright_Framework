@@ -10,7 +10,9 @@ export default defineConfig({
 
   use: {
     trace: 'on-first-retry',
-    headless: false, // Must be false for eBay
+    headless: true,
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
 
     // Anti-bot headers & settings
     userAgent:
@@ -36,21 +38,42 @@ export default defineConfig({
   },
 
   projects: [
-    // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    // },
-
-    // Recommend switching to Chrome for eBay (better stealth support)
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        channel: 'chrome',        // Real Chrome, harder to detect
-        headless: false,          // Required for eBay
+        channel: 'chrome',
+
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         launchOptions: {
           args: ['--disable-blink-features=AutomationControlled'],
+        },
+      },
+    },
+
+    {
+      name: 'firefox',
+      use: {
+        ...devices['Desktop Firefox'],
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+        launchOptions: {
+          firefoxUserPrefs: {
+            'dom.webdriver.enabled': false,          // Hide webdriver
+            'useAutomationExtension': false,
+            'privacy.trackingprotection.enabled': false,
+          },
+          args: [],
+        },
+      },
+    },
+
+    {
+      name: 'webkit',
+      use: {
+        ...devices['Desktop Safari'],
+        userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15',
+        launchOptions: {
+          args: [],
         },
       },
     },

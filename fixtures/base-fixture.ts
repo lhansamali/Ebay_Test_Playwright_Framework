@@ -1,5 +1,5 @@
 import { Page, test, expect } from '@playwright/test';
-import { SearchPage } from '../pages/searchPage';
+import { SearchPage } from '../pages/SearchPage';
 type BaseTestFixtures = {
     baseURL: string;
     searchPage: SearchPage;
