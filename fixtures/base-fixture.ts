@@ -8,6 +8,7 @@ type BaseTestFixtures = {
 export const baseTest = test.extend<BaseTestFixtures>({
     baseURL: 'https://www.ebay.com/',
     searchPage: async ({ page, baseURL }, use) => {
+        // Anti-bot measures: Remove webdriver flag before the page loads
         await page.addInitScript(() => {
             Object.defineProperty(navigator, 'webdriver', {
                 get: () => undefined,

@@ -13,16 +13,18 @@ export class SearchPage {
         this.searchInput = page.getByPlaceholder('Search for anything');
         this.selectItem = page.locator('ul.srp-results li.s-card');
     }
-
+    // Navigate to the base URL
     async navigate() {
         await this.page.goto(this.baseURL);
     }
 
+    // Perform a search for a specific item
     async searchForItem(item: string) {
         await this.searchInput.fill(item);
         await this.searchInput.press('Enter');
     }
 
+    // Select the first item from the search results and return the new page
     async selectFirstItem(): Promise<Page> {
         const [newPage] = await Promise.all([
             this.page.waitForEvent('popup'),
@@ -33,6 +35,7 @@ export class SearchPage {
         return newPage;
     }
 
+    // Get the count of related products on the ITEM page
     async getRelatedProductsCount(itemPage: Page): Promise<number> {
         // Wait for the section to appear on the ITEM page
         await itemPage.waitForSelector('#placement101875', { timeout: 10000 });
@@ -40,6 +43,8 @@ export class SearchPage {
         await relatedProducts.first().waitFor({ timeout: 10000 });
         return await relatedProducts.count();
     }
+
+    // Get the Top Rated Plus related products on the ITEM page
     async getTopRatedPlusRelatedItems(itemPage: Page): Promise<Locator> {
         await itemPage.waitForSelector('#placement101875', { timeout: 10000 });
 
@@ -48,11 +53,13 @@ export class SearchPage {
         });
     }
 
+    // Get the count of Top Rated Plus related products on the ITEM page
     async getTopRatedPlusRelatedCount(itemPage: Page): Promise<number> {
         const items = await this.getTopRatedPlusRelatedItems(itemPage);
         return await items.count();
     }
 
+    //Get the price of the main product on the ITEM page
     async getMainProductPrice(itemPage: Page): Promise<string> {
         await itemPage.waitForSelector('[data-testid="x-price-primary"]', { timeout: 10000 });
         return await itemPage
@@ -61,6 +68,8 @@ export class SearchPage {
             .innerText();
 
     }
+
+    // Get the prices of the related products on the ITEM page
     async getRelatedProductPrices(itemPage: Page): Promise<string[]> {
         await itemPage.waitForSelector('#placement101875 div.aQ4i', { timeout: 10000 });
         const relatedProducts = itemPage.locator('#placement101875 div.aQ4i');
@@ -73,6 +82,7 @@ export class SearchPage {
         return prices;
     }
 
+    // Get the titles of the related products on the ITEM page
     async getRelatedProductTitles(itemPage: Page): Promise<string[]> {
         await itemPage.waitForSelector('#placement101875 div.r2-E', { timeout: 10000 });
         const relatedProducts = itemPage.locator('#placement101875 div.r2-E');
@@ -85,6 +95,7 @@ export class SearchPage {
         return titles;
     }
 
+    // Click on the first related product 
     async clickOnFirstRelatedProduct(itemPage: Page): Promise<Page> {
         await itemPage.waitForSelector('#placement101875', { timeout: 10000 });
         const relatedProducts = itemPage.locator('#placement101875 a.wwfl');
